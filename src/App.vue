@@ -10,8 +10,7 @@ const loading = ref(false)
 const error = ref('')
 const hasFetched = ref(false)
 
-// --- Loading timer ---
-const ESTIMATED_SECONDS = 50
+const ESTIMATED_SECONDS = 150
 const elapsedSeconds = ref(0)
 let timerId: ReturnType<typeof setInterval> | null = null
 
@@ -156,7 +155,7 @@ async function handleCrawl() {
             <span>預估進度 {{ progressPercent }}%</span>
           </div>
 
-          <p class="text-xs text-gray-400">預估約需 {{ ESTIMATED_SECONDS }} 秒，實際時間依網路狀況而定</p>
+          <p class="text-xs text-gray-400">預估約需 2 分 30 秒，實際時間依網路與伺服器狀況而定</p>
         </div>
       </div>
 

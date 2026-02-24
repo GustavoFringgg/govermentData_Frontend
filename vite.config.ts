@@ -4,6 +4,7 @@ import vue from '@vitejs/plugin-vue'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
+  base: '/govermentData_Frontend/',
   plugins: [vue(), tailwindcss()],
   test: {
     environment: 'happy-dom',
