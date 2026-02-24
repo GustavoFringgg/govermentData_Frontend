@@ -3,7 +3,7 @@ import type { Tender } from '../types/tender'
 
 const apiClient = axios.create({
   baseURL: 'https://govermentdata-backend.onrender.com',
-  timeout: 120000,
+  timeout: 180000,
 })
 
 export async function fetchTenders(): Promise<Tender[]> {
