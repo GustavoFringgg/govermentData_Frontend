@@ -2,7 +2,7 @@ import axios from 'axios'
 import type { Tender } from '../types/tender'
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:8000',
+  baseURL: 'https://govermentdata-backend.onrender.com',
   timeout: 120000,
 })
 
