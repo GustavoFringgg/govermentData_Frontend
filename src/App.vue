@@ -10,7 +10,7 @@ const loading = ref(false)
 const error = ref('')
 const hasFetched = ref(false)
 
-const ESTIMATED_SECONDS = 180
+const ESTIMATED_SECONDS = 300
 const elapsedSeconds = ref(0)
 let timerId: ReturnType<typeof setInterval> | null = null
 
