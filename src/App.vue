@@ -14,6 +14,7 @@ const last_updated = ref("");
 const ESTIMATED_SECONDS = 300;
 const elapsedSeconds = ref(0);
 let timerId: ReturnType<typeof setInterval> | null = null;
+const hiddenTenderModes = ref<string[]>([]);
 
 function startTimer() {
   elapsedSeconds.value = 0;
@@ -61,10 +62,18 @@ function sortIcon(key: SortKey): string {
 }
 
 const sortedTenders = computed(() => {
-  if (!sortKey.value) return tenders.value;
+  let list = tenders.value;
+
+  if (hiddenTenderModes.value.length > 0) {
+    list = list.filter(
+      (item) => !hiddenTenderModes.value.includes(item.tender_mode),
+    );
+  }
+
+  if (!sortKey.value) return list;
   const key = sortKey.value;
   const dir = sortAsc.value ? 1 : -1;
-  return [...tenders.value].sort((a, b) => {
+  return [...list].sort((a, b) => {
     if (key === "budget") {
       return (Number(a.budget) - Number(b.budget)) * dir;
     }
@@ -133,6 +142,11 @@ async function handelCached() {
   } finally {
     loadingCached.value = false;
   }
+}
+
+// 篩選 tender
+function onPieFilterChange(hiddenLabels: string[]) {
+  hiddenTenderModes.value = hiddenLabels;
 }
 </script>
 
@@ -224,7 +238,7 @@ async function handelCached() {
       >
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div class="bg-white rounded-xl shadow p-6">
-            <PieChart :tenders="tenders" />
+            <PieChart :tenders="tenders" @filter-change="onPieFilterChange" />
           </div>
           <div class="bg-white rounded-xl shadow p-6">
             <BarChart :tenders="tenders" />
@@ -235,7 +249,7 @@ async function handelCached() {
         <div class="bg-white rounded-xl shadow overflow-hidden">
           <div class="flex items-center justify-between p-6 pb-2">
             <h2 class="text-lg font-semibold">
-              標案列表 (共 {{ tenders.length }} 筆)
+              標案列表 (共 {{ sortedTenders.length }} 筆)
             </h2>
             <div class="flex items-center gap-2 text-sm text-gray-500">
               <label for="pageSize">每頁</label>
