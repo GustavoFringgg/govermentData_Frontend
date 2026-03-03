@@ -241,7 +241,7 @@ function onPieFilterChange(hiddenLabels: string[]) {
             <PieChart :tenders="tenders" @filter-change="onPieFilterChange" />
           </div>
           <div class="bg-white rounded-xl shadow p-6">
-            <BarChart :tenders="tenders" />
+            <BarChart :tenders="sortedTenders" />
           </div>
         </div>
 
