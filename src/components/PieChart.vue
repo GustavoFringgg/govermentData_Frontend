@@ -35,7 +35,7 @@ const COLORS = [
 
 const formattedLastUpdated = computed(() => {
   if (!props.lastUpdated) return "";
-  const d = new Date(props.lastUpdated.replace(" ", "T"));
+  const d = new Date(new Date(props.lastUpdated.replace(" ", "T")).getTime() + 8 * 60 * 60 * 1000);
   const pad = (n: number) => String(n).padStart(2, "0");
   return `${pad(d.getMonth() + 1)}月${pad(d.getDate())}日 ${pad(d.getHours())}時${pad(d.getMinutes())}分`;
 });
