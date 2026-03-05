@@ -165,7 +165,7 @@ function onPieFilterChange(hiddenLabels: string[]) {
       <div class="flex justify-center gap-8">
         <div class="flex justify-center mb-8">
           <button
-            data-testid="crawl-button"
+            data-testid="cached-button"
             class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-lg shadow transition disabled:opacity-50 disabled:cursor-not-allowed"
             :disabled="loadingCached || loading"
             @click="handelCached"

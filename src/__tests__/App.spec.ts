@@ -54,7 +54,7 @@ vi.mock('../components/BarChart.vue', () => ({
   default: { template: '<div data-testid="bar-chart">BarChart</div>', props: ['tenders'] },
 }))
 
-import { fetchTenders, fetchCached } from '../services/api'
+import { fetchTenders } from '../services/api'
 
 describe('App.vue', () => {
   beforeEach(() => {
@@ -71,7 +71,7 @@ describe('App.vue', () => {
     const wrapper = mount(App)
     const btn = wrapper.find('[data-testid="crawl-button"]')
     expect(btn.exists()).toBe(true)
-    expect(btn.text()).toBe('開始爬取標案資料')
+    expect(btn.text()).toBe('爬取最新標案資料')
   })
 
   it('does not show charts before clicking', () => {
@@ -81,7 +81,6 @@ describe('App.vue', () => {
 
   it('shows loading with progress bar when button is clicked', async () => {
     vi.mocked(fetchTenders).mockImplementation(() => new Promise(() => {}))
-    vi.mocked(fetchCached).mockResolvedValue(mockCached)
     const wrapper = mount(App)
     await wrapper.find('[data-testid="crawl-button"]').trigger('click')
     await wrapper.vm.$nextTick()
@@ -93,7 +92,6 @@ describe('App.vue', () => {
 
   it('progress bar advances with elapsed time', async () => {
     vi.mocked(fetchTenders).mockImplementation(() => new Promise(() => {}))
-    vi.mocked(fetchCached).mockResolvedValue(mockCached)
     const wrapper = mount(App)
     await wrapper.find('[data-testid="crawl-button"]').trigger('click')
     await wrapper.vm.$nextTick()
@@ -103,7 +101,7 @@ describe('App.vue', () => {
     await wrapper.vm.$nextTick()
 
     expect(wrapper.text()).toContain('10秒')
-    expect(wrapper.text()).toContain('20%') // 10/50 = 20%
+    expect(wrapper.text()).toContain('3%') // 10/300 = 3%
   })
 
   it('displays charts and table after successful fetch', async () => {
@@ -133,7 +131,6 @@ describe('App.vue', () => {
 
   it('disables button during loading', async () => {
     vi.mocked(fetchTenders).mockImplementation(() => new Promise(() => {}))
-    vi.mocked(fetchCached).mockResolvedValue(mockCached)
     const wrapper = mount(App)
     await wrapper.find('[data-testid="crawl-button"]').trigger('click')
     await wrapper.vm.$nextTick()

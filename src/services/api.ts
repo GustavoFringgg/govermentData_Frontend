@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Tender, Cached } from "../types/tender";
+import type { Cached } from "../types/tender";
 
 const apiClient = axios.create({
   baseURL: "https://govermentdata-backend.onrender.com",
