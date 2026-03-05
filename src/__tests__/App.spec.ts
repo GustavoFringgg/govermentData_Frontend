@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import App from '../App.vue'
-import type { Tender } from '../types/tender'
+import type { Tender, Cached } from '../types/tender'
 
 const mockTenders: Tender[] = [
   {
@@ -36,8 +36,14 @@ const mockTenders: Tender[] = [
   },
 ]
 
+const mockCached: Cached = {
+  data: mockTenders,
+  last_updated: '2026-03-05 13:44:17.911100',
+}
+
 vi.mock('../services/api', () => ({
   fetchTenders: vi.fn(),
+  fetchCached: vi.fn(),
 }))
 
 // Stub chart components to avoid canvas issues in test environment
@@ -48,7 +54,7 @@ vi.mock('../components/BarChart.vue', () => ({
   default: { template: '<div data-testid="bar-chart">BarChart</div>', props: ['tenders'] },
 }))
 
-import { fetchTenders } from '../services/api'
+import { fetchTenders, fetchCached } from '../services/api'
 
 describe('App.vue', () => {
   beforeEach(() => {
@@ -74,9 +80,8 @@ describe('App.vue', () => {
   })
 
   it('shows loading with progress bar when button is clicked', async () => {
-    vi.mocked(fetchTenders).mockImplementation(
-      () => new Promise(() => {}),
-    )
+    vi.mocked(fetchTenders).mockImplementation(() => new Promise(() => {}))
+    vi.mocked(fetchCached).mockResolvedValue(mockCached)
     const wrapper = mount(App)
     await wrapper.find('[data-testid="crawl-button"]').trigger('click')
     await wrapper.vm.$nextTick()
@@ -87,9 +92,8 @@ describe('App.vue', () => {
   })
 
   it('progress bar advances with elapsed time', async () => {
-    vi.mocked(fetchTenders).mockImplementation(
-      () => new Promise(() => {}),
-    )
+    vi.mocked(fetchTenders).mockImplementation(() => new Promise(() => {}))
+    vi.mocked(fetchCached).mockResolvedValue(mockCached)
     const wrapper = mount(App)
     await wrapper.find('[data-testid="crawl-button"]').trigger('click')
     await wrapper.vm.$nextTick()
@@ -103,7 +107,7 @@ describe('App.vue', () => {
   })
 
   it('displays charts and table after successful fetch', async () => {
-    vi.mocked(fetchTenders).mockResolvedValue(mockTenders)
+    vi.mocked(fetchTenders).mockResolvedValue(mockCached)
 
     const wrapper = mount(App)
     await wrapper.find('[data-testid="crawl-button"]').trigger('click')
@@ -128,9 +132,8 @@ describe('App.vue', () => {
   })
 
   it('disables button during loading', async () => {
-    vi.mocked(fetchTenders).mockImplementation(
-      () => new Promise(() => {}),
-    )
+    vi.mocked(fetchTenders).mockImplementation(() => new Promise(() => {}))
+    vi.mocked(fetchCached).mockResolvedValue(mockCached)
     const wrapper = mount(App)
     await wrapper.find('[data-testid="crawl-button"]').trigger('click')
     await wrapper.vm.$nextTick()
@@ -140,7 +143,7 @@ describe('App.vue', () => {
   })
 
   it('sorts by budget when clicking the header', async () => {
-    vi.mocked(fetchTenders).mockResolvedValue(mockTenders)
+    vi.mocked(fetchTenders).mockResolvedValue(mockCached)
 
     const wrapper = mount(App)
     await wrapper.find('[data-testid="crawl-button"]').trigger('click')
@@ -164,7 +167,7 @@ describe('App.vue', () => {
   })
 
   it('sorts by tender_mode when clicking the header', async () => {
-    vi.mocked(fetchTenders).mockResolvedValue(mockTenders)
+    vi.mocked(fetchTenders).mockResolvedValue(mockCached)
 
     const wrapper = mount(App)
     await wrapper.find('[data-testid="crawl-button"]').trigger('click')
@@ -180,7 +183,7 @@ describe('App.vue', () => {
   })
 
   it('shows pagination controls', async () => {
-    vi.mocked(fetchTenders).mockResolvedValue(mockTenders)
+    vi.mocked(fetchTenders).mockResolvedValue(mockCached)
 
     const wrapper = mount(App)
     await wrapper.find('[data-testid="crawl-button"]').trigger('click')
