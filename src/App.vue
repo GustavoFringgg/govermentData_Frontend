@@ -110,8 +110,10 @@ async function handleCrawl() {
   error.value = "";
   startTimer();
   try {
-    tenders.value = await fetchTenders();
+    const { data, last_updated: cachedLastUpdated } = await fetchTenders();
+    tenders.value = data;
     hasFetched.value = true;
+    last_updated.value = cachedLastUpdated;
   } catch (e: unknown) {
     if (e instanceof Error) {
       error.value = e.message;
@@ -238,7 +240,11 @@ function onPieFilterChange(hiddenLabels: string[]) {
       >
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div class="bg-white rounded-xl shadow p-6">
-            <PieChart :tenders="tenders" @filter-change="onPieFilterChange" />
+            <PieChart
+              :tenders="tenders"
+              :last-updated="last_updated"
+              @filter-change="onPieFilterChange"
+            />
           </div>
           <div class="bg-white rounded-xl shadow p-6">
             <BarChart :tenders="sortedTenders" />

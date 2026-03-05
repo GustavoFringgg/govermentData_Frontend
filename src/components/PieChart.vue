@@ -17,6 +17,7 @@ const emit = defineEmits<{ "filter-change": [hiddenLabels: string[]] }>();
 
 const props = defineProps<{
   tenders: Tender[];
+  lastUpdated?: string;
 }>();
 
 const COLORS = [
@@ -31,6 +32,13 @@ const COLORS = [
   "#6366F1",
   "#14B8A6",
 ];
+
+const formattedLastUpdated = computed(() => {
+  if (!props.lastUpdated) return "";
+  const d = new Date(props.lastUpdated.replace(" ", "T"));
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${pad(d.getMonth() + 1)}月${pad(d.getDate())}日 ${pad(d.getHours())}時${pad(d.getMinutes())}分`;
+});
 
 const chartData = computed<ChartData<"pie">>(() => {
   const countMap = new Map<string, number>();
@@ -75,7 +83,10 @@ const chartOptions: ChartOptions<"pie"> = {
 </script>
 
 <template>
-  <div class="w-full max-w-md mx-auto">
+  <span v-if="lastUpdated" class="text-xs text-gray-400"
+    >上次更新：{{ formattedLastUpdated }}</span
+  >
+  <div class="w-full max-w-md mx-auto relative">
     <h2 class="text-lg font-semibold text-center mb-4">招標方式比例</h2>
     <Pie :data="chartData" :options="chartOptions" />
   </div>

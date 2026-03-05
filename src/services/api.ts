@@ -6,8 +6,8 @@ const apiClient = axios.create({
   timeout: 300000,
 });
 
-export async function fetchTenders(): Promise<Tender[]> {
-  const response = await apiClient.get<Tender[]>("/api/tenders");
+export async function fetchTenders(): Promise<Cached> {
+  const response = await apiClient.get<Cached>("/api/tenders");
   return response.data;
 }
 
